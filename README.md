@@ -1,4 +1,4 @@
-# DecentWork - Web3 Job Agent Platform
+# Web3 Job Agent Platform
 
 A comprehensive Web3 job discovery platform powered by Fetch.ai agents and AI chatbot capabilities, featuring a premium Neo Aura glass morphism design.
 

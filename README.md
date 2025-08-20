@@ -113,7 +113,6 @@ job-agent-platform/
 
 1. **Clone and setup**
    ```bash
-   git clone <repository>
    cd job-agent-platform
    npm install
    ```

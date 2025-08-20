@@ -4,3 +4,8 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+ai_chatbot/.env
+backend_agent/.env
+frontend/.env
+icp_contracts/.dfx/
+icp_contracts/.env

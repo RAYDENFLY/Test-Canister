@@ -11,8 +11,10 @@ import Array "mo:base/Array";
 import Option "mo:base/Option";
 import Result "mo:base/Result";
 import Principal "mo:base/Principal";
+import Nat "mo:base/Nat";
+import Iter "mo:base/Iter";
 
-actor JobContract {
+persistent actor JobContract {
     
     // Job status types
     public type JobStatus = {
@@ -61,9 +63,9 @@ actor JobContract {
     private stable var nextJobId: Nat = 1;
     private stable var nextApplicationId: Nat = 1;
     
-    private var jobs = HashMap.HashMap<Text, JobRecord>(10, Text.equal, Text.hash);
-    private var applications = HashMap.HashMap<Text, ApplicationRecord>(50, Text.equal, Text.hash);
-    private var jobApplications = HashMap.HashMap<Text, [Text]>(10, Text.equal, Text.hash);
+    private transient var jobs = HashMap.HashMap<Text, JobRecord>(10, Text.equal, Text.hash);
+    private transient var applications = HashMap.HashMap<Text, ApplicationRecord>(50, Text.equal, Text.hash);
+    private transient var jobApplications = HashMap.HashMap<Text, [Text]>(10, Text.equal, Text.hash);
     
     // Create a new job listing
     public shared(msg) func createJob(
@@ -249,7 +251,7 @@ actor JobContract {
     // Get all jobs (limited to recent ones)
     public query func getAllJobs() : async [JobRecord] {
         let jobArray = jobs.vals();
-        Array.fromIter(jobArray)
+        Iter.toArray(jobArray)
     };
     
     // Get applications for a specific job
@@ -272,14 +274,12 @@ actor JobContract {
     public shared(msg) func getMyApplications() : async [ApplicationRecord] {
         let userPrincipal = msg.caller;
         let allApplications = applications.vals();
-        
         let userApplications = Array.filter<ApplicationRecord>(
-            Array.fromIter(allApplications),
+            Iter.toArray(allApplications),
             func(app: ApplicationRecord) : Bool {
                 app.applicant == userPrincipal
             }
         );
-        
         userApplications
     };
     
@@ -287,14 +287,12 @@ actor JobContract {
     public shared(msg) func getMyJobs() : async [JobRecord] {
         let userPrincipal = msg.caller;
         let allJobs = jobs.vals();
-        
         let userJobs = Array.filter<JobRecord>(
-            Array.fromIter(allJobs),
+            Iter.toArray(allJobs),
             func(job: JobRecord) : Bool {
                 job.client == userPrincipal
             }
         );
-        
         userJobs
     };
     
@@ -305,14 +303,13 @@ actor JobContract {
         openJobs: Nat;
         completedJobs: Nat;
     } {
-        let allJobs = Array.fromIter(jobs.vals());
+        let allJobs = Iter.toArray(jobs.vals());
         let openJobsCount = Array.filter<JobRecord>(allJobs, func(job: JobRecord) : Bool {
             job.status == #Open
         }).size();
         let completedJobsCount = Array.filter<JobRecord>(allJobs, func(job: JobRecord) : Bool {
             job.status == #Completed
         }).size();
-        
         {
             totalJobs = jobs.size();
             totalApplications = applications.size();

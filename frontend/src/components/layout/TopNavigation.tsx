@@ -36,9 +36,6 @@ export default function TopNavigation() {
             <Link href="/jobs" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="nav-jobs">
               Job Board
             </Link>
-            <Link href="/ai-assistant" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="nav-ai">
-              AI Assistant
-            </Link>
             <Link href="/analytics" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="nav-analytics">
               Analytics
             </Link>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import FloatingAIAssistant from "@/components/ai/FloatingAIAssistant";
 
 export const metadata: Metadata = {
   title: "CareerVerse - Decentralized Autonomous Job Marketplace",
@@ -20,6 +21,7 @@ export default function RootLayout({
       </head>
       <body className="font-inter bg-career-gray min-h-screen">
         {children}
+        <FloatingAIAssistant />
       </body>
     </html>
   );

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { apiClient, ChatRequest, ChatResponse } from '@/lib/api';
 
 interface Message {
   id: number;
   type: 'user' | 'ai';
   content: string;
   timestamp: Date;
+  filters?: any; // Job filters from API response
 }
 
 export default function AIAssistant() {
@@ -14,15 +16,41 @@ export default function AIAssistant() {
     {
       id: 1,
       type: 'ai',
-      content: "Hello! I'm your AI career assistant powered by Fetch.ai agents. I can help you find job opportunities, optimize your profile, and negotiate terms. How can I assist you today?",
+      content: "Hello! I'm your AI career assistant powered by Fetch.ai agents and Grok AI. I can help you find job opportunities, optimize your profile, and analyze job requirements. How can I assist you today?",
       timestamp: new Date()
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
+
+  // Check API connection on component mount
+  useEffect(() => {
+    checkAPIConnection();
+  }, []);
+
+  const checkAPIConnection = async () => {
+    setConnectionStatus('checking');
+    try {
+      const connected = await apiClient.testConnection();
+      setIsConnected(connected);
+      setConnectionStatus(connected ? 'connected' : 'disconnected');
+      
+      if (connected) {
+        console.log('✅ Connected to AI chatbot API');
+      } else {
+        console.log('❌ Failed to connect to AI chatbot API');
+      }
+    } catch (error) {
+      setIsConnected(false);
+      setConnectionStatus('disconnected');
+      console.error('❌ Error checking API connection:', error);
+    }
+  };
 
   const sendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isTyping) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
@@ -35,35 +63,75 @@ export default function AIAssistant() {
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Send request to real AI chatbot API
+      const chatRequest: ChatRequest = {
+        user_prompt: inputMessage,
+        top_k: 5
+      };
+
+      const response: ChatResponse = await apiClient.chat(chatRequest);
+      
       const aiResponse: Message = {
         id: messages.length + 2,
         type: 'ai',
-        content: getAIResponse(inputMessage),
+        content: response.message,
+        timestamp: new Date(),
+        filters: response.filters
+      };
+
+      setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      
+      // Fallback response if API fails
+      const errorMessage: Message = {
+        id: messages.length + 2,
+        type: 'ai',
+        content: "I'm sorry, I'm having trouble connecting to my AI services right now. Please check if the backend server is running on port 8081, or try again later.",
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiResponse]);
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
-  const getAIResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-    
-    if (input.includes('job') || input.includes('opportunity')) {
-      return "I found several opportunities that match your profile! Based on your skills in blockchain and AI, I recommend checking out the Senior Blockchain Engineer position at DeFi Solutions ($140k-$200k) and the AI Research Scientist role at Fetch.ai Labs ($160k-$220k). Would you like me to analyze the requirements and help you tailor your application?";
+  const handleQuickAction = (action: string) => {
+    setInputMessage(action);
+    // Auto-send after a short delay
+    setTimeout(() => {
+      if (action === inputMessage) {
+        sendMessage();
+      }
+    }, 100);
+  };
+
+  const getConnectionStatusText = () => {
+    switch (connectionStatus) {
+      case 'checking':
+        return 'Checking connection...';
+      case 'connected':
+        return 'Connected to AI Backend';
+      case 'disconnected':
+        return 'Disconnected from AI Backend';
+      default:
+        return 'Unknown status';
     }
-    
-    if (input.includes('salary') || input.includes('negotiate')) {
-      return "I can help you negotiate better terms! Based on current market data and your experience level, you have strong leverage. The average salary for your skillset is 15% higher than the initial offer. I can draft a negotiation strategy and handle the initial discussions with the employer's AI agent.";
+  };
+
+  const getConnectionStatusColor = () => {
+    switch (connectionStatus) {
+      case 'checking':
+        return 'bg-yellow-500';
+      case 'connected':
+        return 'bg-green-500';
+      case 'disconnected':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
     }
-    
-    if (input.includes('profile') || input.includes('optimize')) {
-      return "Let me analyze your profile... I notice you could strengthen your blockchain certifications and add more recent project examples. Your AI/ML skills are excellent! I recommend highlighting your experience with multi-agent systems and adding Solidity to your tech stack. This could increase your match rate by 40%.";
-    }
-    
-    return "That's an interesting question! As your AI agent, I can help with job matching, salary negotiations, profile optimization, and career planning in the decentralized economy. I work with other AI agents across the CareerVerse network to find the best opportunities for you. What specific area would you like to focus on?";
   };
 
   return (
@@ -74,8 +142,27 @@ export default function AIAssistant() {
             AI Career Assistant
           </h1>
           <p className="text-xl text-gray-600">
-            Powered by Fetch.ai agents for intelligent job matching and career guidance
+            Powered by Fetch.ai agents and Grok AI for intelligent job matching and career guidance
           </p>
+          
+          {/* API Connection Status */}
+          <div className="mt-4 flex items-center space-x-2">
+            <div className={`w-3 h-3 rounded-full ${getConnectionStatusColor()}`}></div>
+            <span className={`text-sm ${
+              connectionStatus === 'connected' ? 'text-green-600' : 
+              connectionStatus === 'checking' ? 'text-yellow-600' : 'text-red-600'
+            }`}>
+              {getConnectionStatusText()}
+            </span>
+            {connectionStatus === 'disconnected' && (
+              <button 
+                onClick={checkAPIConnection}
+                className="ml-2 text-sm text-blue-600 hover:text-blue-800 underline"
+              >
+                Retry Connection
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm h-[600px] flex flex-col">
@@ -89,7 +176,9 @@ export default function AIAssistant() {
                 <h3 className="font-semibold text-gray-900" data-testid="ai-agent-name">
                   CareerVerse AI Agent
                 </h3>
-                <p className="text-sm text-green-600">● Online</p>
+                <p className={`text-sm ${isConnected ? 'text-green-600' : 'text-red-600'}`}>
+                  {isConnected ? '● Online' : '● Offline'}
+                </p>
               </div>
             </div>
           </div>
@@ -110,6 +199,28 @@ export default function AIAssistant() {
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
+                  
+                  {/* Show job filters if available */}
+                  {message.filters && message.type === 'ai' && (
+                    <div className="mt-2 pt-2 border-t border-gray-200">
+                      <p className="text-xs text-gray-600 mb-1">📋 Parsed Job Requirements:</p>
+                      <div className="text-xs text-gray-700 space-y-1">
+                        {message.filters.skills.length > 0 && (
+                          <div><strong>Skills:</strong> {message.filters.skills.join(', ')}</div>
+                        )}
+                        {message.filters.keywords.length > 0 && (
+                          <div><strong>Keywords:</strong> {message.filters.keywords.join(', ')}</div>
+                        )}
+                        {message.filters.budget_min && message.filters.budget_max && (
+                          <div><strong>Budget:</strong> ${message.filters.budget_min}-${message.filters.budget_max}</div>
+                        )}
+                        {message.filters.remote !== null && (
+                          <div><strong>Remote:</strong> {message.filters.remote ? 'Yes' : 'No'}</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
                   <p className={`text-xs mt-1 ${
                     message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
                   }`}>
@@ -143,10 +254,11 @@ export default function AIAssistant() {
                 placeholder="Ask about jobs, salary negotiation, profile optimization..."
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 data-testid="input-chat-message"
+                disabled={!isConnected}
               />
               <button
                 onClick={sendMessage}
-                disabled={!inputMessage.trim() || isTyping}
+                disabled={!inputMessage.trim() || isTyping || !isConnected}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 data-testid="button-send-message"
               >
@@ -159,30 +271,33 @@ export default function AIAssistant() {
         {/* Quick Actions */}
         <div className="mt-6 grid md:grid-cols-3 gap-4">
           <button 
-            onClick={() => setInputMessage("Find me job opportunities in blockchain")}
+            onClick={() => handleQuickAction("Find me job opportunities in blockchain and AI")}
             className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow text-left"
             data-testid="quick-action-jobs"
+            disabled={!isConnected}
           >
             <h3 className="font-semibold text-gray-900 mb-2">🔍 Find Jobs</h3>
             <p className="text-sm text-gray-600">Search for opportunities matching your skills</p>
           </button>
           
           <button 
-            onClick={() => setInputMessage("Help me optimize my profile")}
+            onClick={() => handleQuickAction("Help me optimize my profile for web3 development")}
             className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow text-left"
             data-testid="quick-action-profile"
+            disabled={!isConnected}
           >
             <h3 className="font-semibold text-gray-900 mb-2">⚡ Optimize Profile</h3>
             <p className="text-sm text-gray-600">Get AI-powered profile recommendations</p>
           </button>
           
           <button 
-            onClick={() => setInputMessage("Negotiate salary for my next offer")}
+            onClick={() => handleQuickAction("Analyze job requirements for Python developer positions")}
             className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow text-left"
             data-testid="quick-action-negotiate"
+            disabled={!isConnected}
           >
-            <h3 className="font-semibold text-gray-900 mb-2">💰 Salary Negotiation</h3>
-            <p className="text-sm text-gray-600">Get help with compensation discussions</p>
+            <h3 className="font-semibold text-gray-900 mb-2">📋 Job Analysis</h3>
+            <p className="text-sm text-gray-600">Get detailed job requirement analysis</p>
           </button>
         </div>
       </div>

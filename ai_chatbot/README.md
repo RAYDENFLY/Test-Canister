@@ -40,7 +40,7 @@ ai_chatbot/
 
 ### 1. Set Up Environment
 
-```bash
+   ```bash
 # Create virtual environment
 python3 -m venv .venv
 
@@ -50,12 +50,12 @@ source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
 
 # Install dependencies
-pip install -r requirements.txt
-```
+   pip install -r requirements.txt
+   ```
 
 ### 2. Configure Environment
 
-```bash
+   ```bash
 # Copy environment template
 cp env.example .env
 
@@ -86,7 +86,7 @@ MAILBOX_KEY=your_agentverse_mailbox_key
 3. Add to `.env` file
 
 #### **Agent Seed:**
-```bash
+   ```bash
 # Generate unique agent seed
 python3 generate_agent_seed.py
 # Copy the output to your .env file
@@ -100,7 +100,7 @@ python3 generate_agent_seed.py
 ### 4. Start the Services
 
 #### **Start AI Chatbot Server:**
-```bash
+   ```bash
 # Terminal 1: Start FastAPI server
 python3 main.py
 ```

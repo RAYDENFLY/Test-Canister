@@ -9,12 +9,31 @@ load_dotenv()
 
 app = FastAPI(title="AI Chatbot Service (Grok + OpenAI)")
 
-origins = [o.strip() for o in os.getenv("CORS_ALLOW_ORIGINS", "*").split(",")]
+# CORS configuration with debug logging
+cors_env = os.getenv("CORS_ALLOW_ORIGINS", "*")
+print(f"🔧 CORS_ENV variable: {cors_env}")
+
+origins = [o.strip() for o in cors_env.split(",")]
+print(f"🔧 Initial origins: {origins}")
+
+if origins == ["*"]:
+    origins = ["*"]
+    print("🔧 Using wildcard CORS (*)")
+else:
+    # Add common development origins
+    origins.extend([
+        "http://localhost:3000",
+        "http://localhost:5000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5000"
+    ])
+    print(f"🔧 Extended origins: {origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins != ["*"] else ["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -38,7 +57,17 @@ def parse(req: ChatRequest):
 
 @app.get("/health")
 def health():
-    return {"ok": True}
+    return {
+        "status": "healthy",
+        "timestamp": "2024-01-01T00:00:00Z",
+        "version": "1.0.0"
+    }
+
+# Handle OPTIONS requests explicitly for CORS preflight
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    print(f"🔧 Handling OPTIONS request for: {full_path}")
+    return {"message": "OK"}
 
 if __name__ == "__main__":
     import uvicorn
@@ -54,6 +83,7 @@ if __name__ == "__main__":
     print(f"🤖 Model type: {os.getenv('MODEL_TYPE', 'grok')}")
     print(f"📊 Health check: http://{host}:{port}/health")
     print(f"💬 Chat endpoint: http://{host}:{port}/chat")
+    print(f"🌐 Final CORS origins: {origins}")
     print("=" * 50)
     
     # Start the server

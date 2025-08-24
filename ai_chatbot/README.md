@@ -1,16 +1,17 @@
-# AI Chatbot Service
+# 🤖 AI Chatbot Service
 
-A simple AI chatbot backend service built with FastAPI and LangChain, supporting **OpenAI**, **HuggingFace**, and **Ollama** models.
+A powerful AI-powered job search chatbot service built with FastAPI and LangChain, supporting **Grok API** (lightweight) and **OpenAI** models, with full uAgents integration for blockchain communication.
 
-## 🚀 **Recommended: Ollama (Free & Local)**
+## ✨ Features
 
-**Ollama** is the recommended option because it's:
-- ✅ **Completely free** - No API costs
-- ✅ **Runs locally** - Your data stays private
-- ✅ **High quality models** - Mistral, Llama2, CodeLlama, etc.
-- ✅ **Easy setup** - Simple installation and usage
+- **🤖 AI-Powered Job Search** - Powered by Grok API for intelligent job matching
+- **🔗 uAgents Integration** - Blockchain-based agent communication
+- **🌐 RESTful API** - Clean endpoints for frontend integration
+- **💬 Smart Chat Protocol** - Natural language job requests
+- **🔍 Intelligent Filtering** - Automatic job requirement parsing
+- **📱 Agentverse Ready** - Discoverable on Fetch.ai ecosystem
 
-## Directory Structure
+## 🏗️ Architecture
 
 ```
 ai_chatbot/
@@ -20,154 +21,294 @@ ai_chatbot/
 │   ├── handlers.py            # Chat request handling & user management
 │   └── fetch_agent_client.py  # FetchAI integration stub
 ├── main.py                    # FastAPI entry point
-├── start_chatbot.py           # Startup script
-├── test_chatbot.py            # Test script
+├── agent.py                   # uAgents implementation
+├── test_client.py             # Chat protocol test client
+├── generate_agent_seed.py     # Agent seed generator
 ├── requirements.txt           # Python dependencies
 ├── env.example                # Environment variables template
+├── SETUP_GROK.md              # Grok setup guide
 └── README.md                  # This file
 ```
 
-## Features
+## 🚀 Quick Start
 
-- **Multi-model support**: OpenAI GPT models, HuggingFace models, or **Ollama local models**
-- **Conversation memory**: Maintains context per user
-- **RESTful API**: Clean endpoints for chat interactions
-- **User tracking**: Monitor user activity and conversation statistics
-- **FetchAI integration**: Stub for future FetchAI backend integration
-- **Modular architecture**: Clean separation of concerns
+### Prerequisites
 
-## Quick Start
+- **Python 3.8+** (recommended: 3.12)
+- **WSL/Ubuntu** (recommended for development)
+- **Git**
 
-### Option 1: Ollama (Recommended - Free & Local)
-
-1. **Install Ollama**:
-   ```bash
-   # Windows: Download from https://ollama.ai/
-   # macOS: brew install ollama
-   # Linux: curl -fsSL https://ollama.ai/install.sh | sh
-   ```
-
-2. **Start Ollama and pull a model**:
-   ```bash
-   ollama serve
-   # In another terminal:
-   ollama pull mistral
-   ```
-
-3. **Install Python dependencies**:
-   ```bash
-   cd ai_chatbot
-   pip install -r requirements.txt
-   ```
-
-4. **Start the service**:
-   ```bash
-   python start_chatbot.py
-   ```
-
-### Option 2: OpenAI or HuggingFace
-
-1. **Install dependencies**:
-   ```bash
-   cd ai_chatbot
-   pip install -r requirements.txt
-   ```
-
-2. **Set up environment variables**:
-   ```bash
-   cp env.example .env
-   # Edit .env with your API keys
-   ```
-
-3. **Start the service**:
-   ```bash
-   python start_chatbot.py
-   ```
-
-## API Endpoints
-
-- `POST /chat` - Send a chat message
-- `GET /health` - Health check
-- `GET /users/{user_id}/stats` - Get user statistics
-- `DELETE /users/{user_id}/conversation` - Clear user conversation
-- `GET /system/status` - Get system status
-
-## Environment Variables
-
-- `MODEL_TYPE`: Choose between "ollama" (default), "openai", or "huggingface"
-- `OLLAMA_MODEL`: Model name (default: "mistral")
-- `OLLAMA_BASE_URL`: Ollama server URL (default: "http://localhost:11434")
-- `OPENAI_API_KEY`: Your OpenAI API key (if using OpenAI)
-- `HUGGINGFACEHUB_API_TOKEN`: Your HuggingFace token (if using HuggingFace)
-- `HOST`: Server host (default: 0.0.0.0)
-- `PORT`: Server port (default: 8000)
-- `DEBUG`: Enable debug mode (default: false)
-
-## Ollama Models
-
-Popular free models you can use:
+### 1. Set Up Environment
 
 ```bash
-# General purpose
-ollama pull mistral      # Fast, good quality
-ollama pull llama2       # Meta's Llama 2
-ollama pull codellama    # Great for coding
+# Create virtual environment
+python3 -m venv .venv
 
-# Specialized
-ollama pull neural-chat  # Good conversation
-ollama pull dolphin-phi  # Microsoft's Phi model
+# Activate virtual environment
+source .venv/bin/activate  # Linux/Mac
+# or
+.venv\Scripts\activate     # Windows
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-## Example Usage
+### 2. Configure Environment
 
 ```bash
-# Test the chat endpoint
-curl -X POST "http://localhost:8000/chat" \
+# Copy environment template
+cp env.example .env
+
+# Edit .env with your API keys
+nano .env
+```
+
+**Required Environment Variables:**
+```env
+# AI Configuration
+MODEL_TYPE=grok
+GROK_API_KEY=your_grok_api_key_here
+
+# Server Configuration
+PORT=8081
+
+# uAgents Configuration
+AGENT_NAME=job_chat_agent
+AGENT_SEED=your_unique_agent_seed
+MAILBOX_KEY=your_agentverse_mailbox_key
+```
+
+### 3. Get API Keys
+
+#### **Grok API Key:**
+1. Visit [Grok Console](https://console.groq.com/)
+2. Sign up and get your API key
+3. Add to `.env` file
+
+#### **Agent Seed:**
+```bash
+# Generate unique agent seed
+python3 generate_agent_seed.py
+# Copy the output to your .env file
+```
+
+#### **Mailbox Key:**
+1. Visit [Agentverse](https://agentverse.ai/)
+2. Create account and get mailbox key
+3. Add to `.env` file
+
+### 4. Start the Services
+
+#### **Start AI Chatbot Server:**
+```bash
+# Terminal 1: Start FastAPI server
+python3 main.py
+```
+
+**Expected Output:**
+```
+🚀 Starting AI Chatbot Service...
+📡 Server will be available at: http://0.0.0.0:8081
+🤖 Model type: grok
+📊 Health check: http://0.0.0.0:8081/health
+💬 Chat endpoint: http://0.0.0.0:8081/chat
+```
+
+#### **Start uAgents Service:**
+```bash
+# Terminal 2: Start uAgents
+python3 agent.py
+```
+
+**Expected Output:**
+```
+INFO: Agent address: agent1...
+INFO: Mailbox enabled; your agent is discoverable on Agentverse.
+```
+
+## 🧪 Testing
+
+### **Test API Endpoints:**
+
+```bash
+# Health check
+curl http://localhost:8081/health
+
+# Chat with AI
+curl -X POST "http://localhost:8081/chat" \
      -H "Content-Type: application/json" \
-     -d '{
-       "user_id": "user123",
-       "message": "Hello, how are you?"
-     }'
+     -d '{"user_prompt": "I need a Python developer"}'
 
-# Check system status
-curl "http://localhost:8000/system/status"
+# Parse job filters
+curl -X POST "http://localhost:8081/parse" \
+     -H "Content-Type: application/json" \
+     -d '{"user_prompt": "Remote React developer, $50-100/hour"}'
 ```
 
-## Development
+### **Test uAgents:**
+```bash
+# Edit test_client.py and add your agent's address
+python3 test_client.py
+```
 
-The service is organized into modular components:
+## 📚 API Reference
 
-- **`chatbot/model.py`**: Handles LLM initialization and conversation chains
-- **`chatbot/handlers.py`**: Manages chat requests and user interactions
-- **`chatbot/fetch_agent_client.py`**: Stub for FetchAI integration
-- **`main.py`**: FastAPI application and endpoint definitions
+### **Endpoints**
 
-## Testing
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Server health check |
+| `POST` | `/chat` | Process job search requests |
+| `POST` | `/parse` | Extract job filters from text |
 
-Run the comprehensive test suite to verify all endpoints work correctly:
+### **Chat Request Format**
+```json
+{
+  "user_prompt": "I need a Python developer for web development",
+  "top_k": 5
+}
+```
+
+### **Response Format**
+```json
+{
+  "message": "I'll help you find a Python developer...",
+  "filters": {
+    "skills": ["python", "web development"],
+    "keywords": ["python", "web"],
+    "budget_min": null,
+    "budget_max": null,
+    "rate_type": null,
+    "remote": null,
+    "duration_days_max": null,
+    "top_k": 5
+  },
+  "should_fetch_jobs": true
+}
+```
+
+## 🔧 Configuration
+
+### **Environment Variables**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MODEL_TYPE` | AI model provider | `grok` |
+| `GROK_API_KEY` | Grok API key | Required |
+| `PORT` | Server port | `8081` |
+| `AGENT_NAME` | uAgent name | `job_chat_agent` |
+| `AGENT_SEED` | Unique agent seed | Required |
+| `MAILBOX_KEY` | Agentverse mailbox key | Optional |
+
+### **AI Models**
+
+| Provider | Model | Features |
+|----------|-------|----------|
+| **Grok** | `llama3-8b-8192` | Fast, lightweight, cost-effective |
+| **OpenAI** | `gpt-3.5-turbo` | High quality, cloud-based |
+
+## 🚀 Deployment
+
+### **Production Setup**
+
+1. **Set Production Environment:**
+   ```bash
+   export DEBUG=false
+   export HOST=0.0.0.0
+   export PORT=8081
+   ```
+
+2. **Use Process Manager:**
+   ```bash
+   # Install PM2
+   npm install -g pm2
+   
+   # Start services
+   pm2 start "python3 main.py" --name "job-chatbot"
+   pm2 start "python3 agent.py" --name "job-agent"
+   ```
+
+3. **Set Up Reverse Proxy:**
+   ```nginx
+   server {
+       listen 80;
+       server_name your-domain.com;
+       
+       location / {
+           proxy_pass http://localhost:8081;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+       }
+   }
+   ```
+
+## 🐛 Troubleshooting
+
+### **Common Issues**
+
+| Issue | Solution |
+|-------|----------|
+| **Port already in use** | Change `PORT` in `.env` or kill existing processes |
+| **Grok API errors** | Verify `GROK_API_KEY` and account credits |
+| **Agent not discoverable** | Check `MAILBOX_KEY` and agent registration |
+| **Import errors** | Ensure virtual environment is activated |
+| **Duplicate responses** | Check agent.py for message deduplication |
+
+### **Debug Mode**
 
 ```bash
-python test_chatbot.py
+# Enable debug logging
+export DEBUG=true
+python3 main.py
 ```
 
-## Troubleshooting
+## 🔗 Integration
 
-### Ollama Issues
+### **Frontend Integration**
 
-1. **"Cannot connect to Ollama server"**:
-   ```bash
-   # Make sure Ollama is running
-   ollama serve
-   ```
+Your frontend can communicate with the chatbot using:
 
-2. **"Model not found"**:
-   ```bash
-   # Pull the model first
-   ollama pull mistral
-   ```
+```javascript
+// Chat endpoint
+const response = await fetch('http://localhost:8081/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    user_prompt: "I need a React developer"
+  })
+});
 
-3. **Slow responses**: Try a smaller model like `mistral:7b` instead of `llama2:70b`
+const result = await response.json();
+console.log(result.message);        // AI response
+console.log(result.filters);        // Parsed job filters
+```
 
-## License
+### **uAgents Integration**
+
+The service is fully compatible with the uAgents ecosystem:
+
+- **Agentverse Discovery** - Your agent is discoverable
+- **Chat Protocol** - ASI:1 compatible messaging
+- **Blockchain Communication** - Fetch.ai integration ready
+
+## 📖 Additional Documentation
+
+- **[SETUP_GROK.md](SETUP_GROK.md)** - Detailed Grok setup guide
+- **[requirements.txt](requirements.txt)** - Python dependencies
+- **[env.example](env.example)** - Environment configuration template
+
+## 🤝 Contributing
+
+1. **Fork the repository**
+2. **Create feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to branch** (`git push origin feature/amazing-feature`)
+5. **Open Pull Request**
+
+## 📄 License
 
 This project is licensed under the MIT License.
+
+---
+
+**Ready to revolutionize job discovery with AI and blockchain technology!** 🚀

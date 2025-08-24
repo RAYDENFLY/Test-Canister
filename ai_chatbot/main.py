@@ -7,7 +7,7 @@ from chatbot.handlers import handle_chat, Filters, ChatResult
 
 load_dotenv()
 
-app = FastAPI(title="AI Chatbot Service (REST + Ollama)")
+app = FastAPI(title="AI Chatbot Service (Grok + OpenAI)")
 
 origins = [o.strip() for o in os.getenv("CORS_ALLOW_ORIGINS", "*").split(",")]
 app.add_middleware(
@@ -39,3 +39,28 @@ def parse(req: ChatRequest):
 @app.get("/health")
 def health():
     return {"ok": True}
+
+if __name__ == "__main__":
+    import uvicorn
+    
+    # Get configuration from environment variables
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8081"))
+    debug = os.getenv("DEBUG", "false").lower() == "true"
+    
+    print(f"🚀 Starting AI Chatbot Service...")
+    print(f"📡 Server will be available at: http://{host}:{port}")
+    print(f"🔧 Debug mode: {debug}")
+    print(f"🤖 Model type: {os.getenv('MODEL_TYPE', 'grok')}")
+    print(f"📊 Health check: http://{host}:{port}/health")
+    print(f"💬 Chat endpoint: http://{host}:{port}/chat")
+    print("=" * 50)
+    
+    # Start the server
+    uvicorn.run(
+        "main:app",
+        host=host,
+        port=port,
+        reload=debug,
+        log_level="info"
+    )

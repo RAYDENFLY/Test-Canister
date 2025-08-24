@@ -3,6 +3,7 @@ uvicorn
 pydantic
 python-dotenv
 langchain
-langchain-ollama
+langchain-groq
 requests
 uagents
+uagents-core

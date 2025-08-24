@@ -1,9 +1,21 @@
-fastapi
-uvicorn
-pydantic
-python-dotenv
-langchain
-langchain-groq
-requests
-uagents
-uagents-core
+# Core dependencies with pinned versions for security
+fastapi>=0.104.1,<0.105.0
+uvicorn[standard]>=0.24.0,<0.25.0
+pydantic>=2.5.0,<3.0.0
+python-dotenv>=1.0.0,<2.0.0
+
+# AI/ML dependencies
+langchain>=0.1.0,<0.2.0
+langchain-groq>=0.0.1,<0.1.0
+
+# HTTP and networking
+requests>=2.31.0,<3.0.0
+
+# uAgents framework
+uagents>=0.4.0,<0.5.0
+uagents-core>=0.1.0,<0.2.0
+
+# Security and development tools
+bandit>=1.7.5  # Security linter
+safety>=2.3.5  # CVE scanner
+pip-audit>=2.6.1  # Dependency vulnerability checker

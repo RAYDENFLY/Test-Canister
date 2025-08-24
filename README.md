@@ -1,36 +1,85 @@
 # 🚀 Web3 Job Agent Platform
 
-A comprehensive Web3 job discovery platform powered by **Fetch.ai agents** and **AI chatbot capabilities**, featuring a premium Neo Aura glass morphism design.
+A comprehensive **Web3 job discovery platform** powered by **Fetch.ai uAgents**, **AI chatbot capabilities**, and **ICP smart contracts**, featuring a modern Next.js frontend with floating AI assistant.
 
 ## ✨ Features
 
 - **🤖 AI-Powered Job Search** - Powered by Grok API for intelligent job matching
-- **🔗 uAgents Integration** - Blockchain-based agent communication
-- **🌐 RESTful API** - Clean endpoints for frontend integration
-- **💬 Smart Chat Protocol** - Natural language job requests
-- **🔍 Intelligent Filtering** - Automatic job requirement parsing
+- **🔗 uAgents Integration** - ASI:1 compatible blockchain-based agent communication
+- **🌐 Modern Frontend** - Next.js 14 with Tailwind CSS and floating AI chat
+- **💬 Smart Chat Protocol** - Natural language job requests with session management
+- **🔍 Intelligent Filtering** - Automatic job requirement parsing and extraction
 - **📱 Agentverse Ready** - Discoverable on Fetch.ai ecosystem
+- **⛓️ ICP Smart Contracts** - Motoko-based job and identity management
+- **🔒 Security Focused** - Comprehensive security scanning and CVE management
 
-## 🏗️ Architecture
+## 🏗️ Project Architecture
 
 ```
 Kelompok-8/
-├── ai_chatbot/                 # 🤖 AI Chatbot Service
-│   ├── chatbot/                # Core chatbot modules
-│   ├── agent.py                # uAgents implementation
-│   ├── main.py                 # FastAPI server
-│   └── requirements.txt        # Python dependencies
-├── icp_contracts/              # ⛓️ ICP Smart Contracts
-│   └── src/
-│       └── job_contract.mo     # Motoko job management
-└── README.md                   # This file
+├── 📁 frontend/                    # 🌐 Next.js 14 Frontend Application
+│   ├── 📁 src/
+│   │   ├── 📁 app/                # Next.js App Router
+│   │   │   ├── 📄 layout.tsx      # Root layout with floating AI
+│   │   │   ├── 📄 page.tsx        # Homepage
+│   │   │   ├── 📁 jobs/           # Job listings pages
+│   │   │   ├── 📁 analytics/      # Career analytics
+│   │   │   ├── 📁 docs/           # Documentation
+│   │   │   └── 📁 demo/           # AI assistant demo
+│   │   ├── 📁 components/         # React components
+│   │   │   ├── 📁 ai/             # AI assistant components
+│   │   │   │   ├── 📄 FloatingAIAssistant.tsx  # Floating chat widget
+│   │   │   │   └── 📄 AIAssistant.tsx         # Legacy AI component
+│   │   │   ├── 📁 layout/         # Layout components
+│   │   │   │   ├── 📄 TopNavigation.tsx       # Main navigation
+│   │   │   │   └── 📄 Sidebar.tsx             # Project sidebar
+│   │   │   ├── 📁 ui/             # Base UI components
+│   │   │   ├── 📁 jobs/           # Job-related components
+│   │   │   ├── 📁 home/           # Homepage components
+│   │   │   ├── 📁 dashboard/      # Dashboard components
+│   │   │   └── 📁 analytics/      # Analytics components
+│   │   └── 📁 lib/                # Utility libraries
+│   │       └── 📄 api.ts          # API client for AI backend
+│   ├── 📁 public/                 # Static assets
+│   ├── 📁 scripts/                # Build and security scripts
+│   ├── 📄 package.json            # Frontend dependencies
+│   ├── 📄 next.config.js          # Next.js configuration
+│   ├── 📄 tailwind.config.ts      # Tailwind CSS configuration
+│   └── 📄 env.example             # Frontend environment template
+│
+├── 📁 ai_chatbot/                 # 🤖 AI Chatbot Service (Backend)
+│   ├── 📁 chatbot/                # Core chatbot modules
+│   │   ├── 📄 __init__.py         # Package initialization
+│   │   ├── 📄 model.py            # LLM initialization and chains
+│   │   └── 📄 handlers.py         # Chat request handlers
+│   ├── 📁 scripts/                # Security and utility scripts
+│   │   └── 📄 security-check.sh   # Automated security scanning
+│   ├── 📄 agent.py                # Fetch.ai uAgent (ASI:1 compatible)
+│   ├── 📄 main.py                 # FastAPI server entry point
+│   ├── 📄 requirements.txt        # Python dependencies
+│   ├── 📄 env.example             # Environment variables template
+│   ├── 📄 SETUP_GROK.md           # Grok API setup guide
+│   ├── 📄 generate_agent_seed.py  # Agent seed generation script
+│   ├── 📄 test_client.py          # uAgent testing client
+│   └── 📄 test_grok.py            # Grok API testing script
+│
+├── 📁 icp_contracts/              # ⛓️ ICP Smart Contracts
+│   ├── 📁 src/
+│   │   └── 📄 job_contract.mo     # Motoko job management contract
+│   └── 📄 dfx.json                # DFX configuration
+│
+├── 📄 README.md                    # This project overview
+├── 📄 SECURITY.md                  # Security guidelines and tools
+├── 📄 .gitignore                   # Git ignore patterns
+└── 📄 .gitattributes              # Git attributes
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Python 3.8+** (recommended: 3.12)
+- **Node.js 18+** (for frontend)
+- **Python 3.8+** (recommended: 3.12 for backend)
 - **WSL/Ubuntu** (recommended for development)
 - **Git**
 
@@ -41,11 +90,30 @@ git clone <your-repo-url>
 cd Kelompok-8
 ```
 
-### 2. Set Up AI Chatbot Service
+### 2. Set Up Frontend (Next.js)
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp env.example .env.local
+# Edit .env.local with your API configuration
+
+# Start development server
+npm run dev
+```
+
+**Frontend will be available at:** http://localhost:5000
+
+### 3. Set Up AI Chatbot Service (Backend)
 
 ```bash
 # Navigate to chatbot directory
-cd ai_chatbot
+cd ../ai_chatbot
 
 # Create virtual environment
 python3 -m venv .venv
@@ -59,7 +127,7 @@ source .venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment
+### 4. Configure Backend Environment
 
 ```bash
 # Copy environment template
@@ -77,6 +145,10 @@ GROK_API_KEY=your_grok_api_key_here
 
 # Server Configuration
 PORT=8081
+HOST=0.0.0.0
+
+# CORS Configuration
+CORS_ALLOW_ORIGINS=http://localhost:3000,http://localhost:5000,http://127.0.0.1:3000,http://127.0.0.1:5000
 
 # uAgents Configuration
 AGENT_NAME=job_chat_agent
@@ -84,7 +156,7 @@ AGENT_SEED=your_unique_agent_seed
 MAILBOX_KEY=your_agentverse_mailbox_key
 ```
 
-### 4. Get API Keys
+### 5. Get API Keys
 
 #### **Grok API Key:**
 1. Visit [Grok Console](https://console.groq.com/)
@@ -103,7 +175,7 @@ python3 generate_agent_seed.py
 2. Create account and get mailbox key
 3. Add to `.env` file
 
-### 5. Start the Services
+### 6. Start the Services
 
 #### **Start AI Chatbot Server:**
 ```bash
@@ -114,10 +186,12 @@ python3 main.py
 **Expected Output:**
 ```
 🚀 Starting AI Chatbot Service...
-📡 Server will be available at: http://0.0.0.0:8081
+🔧 Debug mode: True
 🤖 Model type: grok
+📡 Server will be available at: http://0.0.0.0:8081
 📊 Health check: http://0.0.0.0:8081/health
 💬 Chat endpoint: http://0.0.0.0:8081/chat
+🌐 Final CORS origins: ['http://localhost:3000', 'http://localhost:5000', ...]
 ```
 
 #### **Start uAgents Service:**
@@ -133,6 +207,12 @@ INFO: Mailbox enabled; your agent is discoverable on Agentverse.
 ```
 
 ## 🧪 Testing
+
+### **Test Frontend:**
+1. Open http://localhost:5000
+2. Look for the **blue AI assistant icon** in the bottom-right corner
+3. Click it to open the floating chat window
+4. Test the AI integration
 
 ### **Test API Endpoints:**
 
@@ -157,6 +237,28 @@ curl -X POST "http://localhost:8081/parse" \
 python3 test_client.py
 ```
 
+## 🌟 Frontend Features
+
+### **Floating AI Assistant**
+- **Always Accessible** - Available on every page
+- **Expandable Chat** - Click to open, minimize when needed
+- **Real-time Status** - Visual connection indicator
+- **Quick Actions** - Pre-built job search queries
+- **Responsive Design** - Works on all devices
+
+### **Modern UI Components**
+- **Next.js 14** with App Router
+- **Tailwind CSS** for styling
+- **TypeScript** for type safety
+- **Radix UI** for accessible components
+- **Lucide React** for icons
+
+### **AI Integration**
+- **Real-time Chat** with Grok API
+- **Connection Monitoring** with status indicators
+- **Error Handling** with user-friendly messages
+- **Job Filter Parsing** with visual display
+
 ## 📚 API Reference
 
 ### **Endpoints**
@@ -166,6 +268,7 @@ python3 test_client.py
 | `GET` | `/health` | Server health check |
 | `POST` | `/chat` | Process job search requests |
 | `POST` | `/parse` | Extract job filters from text |
+| `OPTIONS` | `/*` | CORS preflight handling |
 
 ### **Chat Request Format**
 ```json
@@ -195,13 +298,23 @@ python3 test_client.py
 
 ## 🔧 Configuration
 
-### **Environment Variables**
+### **Frontend Environment Variables**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | AI backend URL | `http://localhost:8081` |
+| `NEXT_PUBLIC_API_TIMEOUT` | API timeout (ms) | `10000` |
+| `NEXT_PUBLIC_API_RETRIES` | API retry attempts | `3` |
+
+### **Backend Environment Variables**
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `MODEL_TYPE` | AI model provider | `grok` |
 | `GROK_API_KEY` | Grok API key | Required |
 | `PORT` | Server port | `8081` |
+| `HOST` | Server host | `0.0.0.0` |
+| `CORS_ALLOW_ORIGINS` | Allowed origins | Multiple localhost URLs |
 | `AGENT_NAME` | uAgent name | `job_chat_agent` |
 | `AGENT_SEED` | Unique agent seed | Required |
 | `MAILBOX_KEY` | Agentverse mailbox key | Optional |
@@ -213,9 +326,37 @@ python3 test_client.py
 | **Grok** | `llama3-8b-8192` | Fast, lightweight, cost-effective |
 | **OpenAI** | `gpt-3.5-turbo` | High quality, cloud-based |
 
+## 🔒 Security Features
+
+### **Automated Security Scanning**
+- **Frontend**: `npm audit`, `npm outdated`
+- **Backend**: `pip-audit`, `safety`, `bandit`
+- **Scripts**: Automated security checks in `scripts/` folders
+
+### **Security Commands**
+```bash
+# Frontend security
+npm run security:audit
+npm run security:fix
+
+# Backend security
+cd ai_chatbot
+./scripts/security-check.sh
+```
+
 ## 🚀 Deployment
 
-### **Production Setup**
+### **Frontend Deployment**
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+### **Backend Deployment**
 
 1. **Set Production Environment:**
    ```bash
@@ -254,10 +395,12 @@ python3 test_client.py
 
 | Issue | Solution |
 |-------|----------|
+| **Frontend not connecting to backend** | Check CORS settings and API URL |
 | **Port already in use** | Change `PORT` in `.env` or kill existing processes |
 | **Grok API errors** | Verify `GROK_API_KEY` and account credits |
 | **Agent not discoverable** | Check `MAILBOX_KEY` and agent registration |
 | **Import errors** | Ensure virtual environment is activated |
+| **CORS issues** | Verify `CORS_ALLOW_ORIGINS` includes frontend URL |
 
 ### **Debug Mode**
 
@@ -266,6 +409,14 @@ python3 test_client.py
 export DEBUG=true
 python3 main.py
 ```
+
+### **Connection Status**
+
+The floating AI assistant shows connection status:
+- **🟢 Green**: Fully connected
+- **🟠 Orange**: Backend running, agent not ready
+- **🔴 Red**: Disconnected
+- **🟡 Yellow**: Checking connection
 
 ## 🤝 Contributing
 
@@ -281,18 +432,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Documentation**: [Project Wiki](link-to-wiki)
+- **Documentation**: Check individual module READMEs
 - **Issues**: [GitHub Issues](link-to-issues)
-- **Discord**: [Community Server](link-to-discord)
+- **Security**: See [SECURITY.md](SECURITY.md) for security guidelines
 
 ## 🙏 Acknowledgments
 
-- **Fetch.ai** for uAgents framework
+- **Fetch.ai** for uAgents framework and ASI:1 protocol
 - **Grok** for AI API services
 - **Agentverse** for agent discovery
+- **Next.js** for modern frontend framework
+- **Tailwind CSS** for utility-first styling
 
 ---
 
 **Built with ❤️ by Kelompok-8**
 
-*Ready to revolutionize job discovery with AI and blockchain technology!* 🚀
+*Ready to revolutionize job discovery with AI, blockchain technology, and modern web development!* 🚀

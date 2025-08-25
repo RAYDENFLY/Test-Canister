@@ -1,0 +1,82 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "CareerVerse CareerVerse" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "CareerVerse" [ref=e7] [cursor=pointer]
+        - generic [ref=e8] [cursor=pointer]: CareerVerse
+      - generic [ref=e9]:
+        - link "Job Board" [ref=e10] [cursor=pointer]:
+          - /url: /jobs
+        - link "Analytics" [ref=e11] [cursor=pointer]:
+          - /url: /analytics
+        - link "Docs" [ref=e12] [cursor=pointer]:
+          - /url: /docs
+      - generic [ref=e14]:
+        - button "U Login" [ref=e15] [cursor=pointer]:
+          - generic [ref=e16] [cursor=pointer]: U
+          - generic [ref=e17] [cursor=pointer]: Login
+        - generic [ref=e18]:
+          - heading "Sign In" [level=3] [ref=e19]
+          - generic [ref=e20]:
+            - textbox "Email" [ref=e21]
+            - textbox "Password" [ref=e22]
+            - button "Sign In" [ref=e23] [cursor=pointer]
+            - button "Create Account" [ref=e24] [cursor=pointer]
+            - button "Login dengan Internet Identity" [active] [ref=e25] [cursor=pointer]
+  - generic [ref=e26]:
+    - generic [ref=e29]:
+      - heading "Decentralized Autonomous Job Marketplace" [level=1] [ref=e30]:
+        - text: Decentralized Autonomous
+        - generic [ref=e31]: Job Marketplace
+      - paragraph [ref=e32]: A platform where AI agents represent job seekers and employers, autonomously matching candidates to job openings based on skills, experience, and cultural fit, leveraging Fetch.ai for agent interactions and ICP for secure, decentralized data storage.
+      - generic [ref=e33]:
+        - button "Get Started" [ref=e34] [cursor=pointer]
+        - button "Learn More" [ref=e35] [cursor=pointer]
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - heading "Revolutionary Job Matching" [level=2] [ref=e39]
+        - paragraph [ref=e40]: Experience the future of hiring with AI agents and blockchain technology
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]: 🤖
+          - heading "AI-Powered Matching" [level=3] [ref=e44]
+          - paragraph [ref=e45]: Fetch.ai agents automatically match job seekers with perfect opportunities based on skills and culture fit.
+        - generic [ref=e46]:
+          - generic [ref=e47]: 🔒
+          - heading "Secure & Decentralized" [level=3] [ref=e48]
+          - paragraph [ref=e49]: ICP blockchain ensures secure, private, and verifiable employment data and smart contracts.
+        - generic [ref=e50]:
+          - generic [ref=e51]: ⚡
+          - heading "Fast & Efficient" [level=3] [ref=e52]
+          - paragraph [ref=e53]: Autonomous agents handle negotiations and matching, making hiring 10x faster than traditional methods.
+        - generic [ref=e54]:
+          - generic [ref=e55]: 🌍
+          - heading "Borderless Economy" [level=3] [ref=e56]
+          - paragraph [ref=e57]: Connect with opportunities worldwide in a transparent, efficient job economy without borders.
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - heading "Platform Performance" [level=2] [ref=e61]
+        - paragraph [ref=e62]: See how our decentralized marketplace is transforming hiring
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]: 10,000+
+          - generic [ref=e66]: Active AI Agents
+        - generic [ref=e67]:
+          - generic [ref=e68]: 5,000+
+          - generic [ref=e69]: Job Matches
+        - generic [ref=e70]:
+          - generic [ref=e71]: 98%
+          - generic [ref=e72]: Success Rate
+        - generic [ref=e73]:
+          - generic [ref=e74]: 24/7
+          - generic [ref=e75]: Autonomous Matching
+  - generic [ref=e76]:
+    - button "AI Career Assistant" [ref=e77] [cursor=pointer]:
+      - img [ref=e78] [cursor=pointer]
+    - generic: Connected to AI Backend
+  - alert [ref=e82]
+```

@@ -33,3 +33,28 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Logs
+*.log
+
+# Editor
+.vscode/
+.idea/
+
+# Playwright
+/playwright-report/
+
+# Generated ICP artifact files (copied from .dfx/local during development)
+# If you intentionally want to commit these, remove these lines
+/public/*.did.js
+/public/*.did
+/public/*.wasm
+/public/*.wasm.gz
+
+# DFX and local replica state
+.dfx/
+
+# Environment files (keep examples in repo)
+.env
+.env.*.local
+.env.local

@@ -1,0 +1,60 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+
+# Editor
+.vscode/
+.idea/
+
+# Playwright
+/playwright-report/
+
+# Generated ICP artifact files (copied from .dfx/local during development)
+# If you intentionally want to commit these, remove these lines
+/public/*.did.js
+/public/*.did
+/public/*.wasm
+/public/*.wasm.gz
+
+# DFX and local replica state
+.dfx/
+
+# Environment files (keep examples in repo)
+.env
+.env.*.local
+.env.local

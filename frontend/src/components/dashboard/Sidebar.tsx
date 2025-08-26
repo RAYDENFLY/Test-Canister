@@ -23,6 +23,28 @@ export default function Sidebar() {
     } catch (e) {
       // ignore
     }
+    // also listen for storage events so other windows/tabs or the II callback
+    // can update the sidebar immediately when pending items are flushed
+    function onStorage(e: StorageEvent) {
+      if (e.key && (e.key.startsWith('cv:') || e.key === 'cv:isAuthenticated')) {
+        try {
+          const raw = localStorage.getItem('cv:profile') || localStorage.getItem('cv:pendingProfile');
+          if (raw) {
+            const p = JSON.parse(raw);
+            setUserName(p.name || 'User Name');
+            setUserEmail(p.email || '@username');
+            setUserRole(p.role || '');
+          } else {
+            // cleared
+            setUserName('User Name');
+            setUserEmail('@username');
+            setUserRole('');
+          }
+        } catch (err) { /* ignore */ }
+      }
+    }
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, []);
 
   return (

@@ -8,6 +8,14 @@
     "identity_contract": {
       "type": "motoko", 
       "main": "src/identity_contract.mo"
+    },
+    "chat_contract": {
+      "type": "motoko",
+      "main": "src/chat_contract.mo"
+    },
+    "agent_contract": {
+      "type": "motoko",
+      "main": "src/agent_contract.mo"
     }
   },
   "networks": {

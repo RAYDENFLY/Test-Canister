@@ -15,7 +15,7 @@ type Application = {
 	role?: string;
 };
 
-import { createJobActor } from '@/lib/icp';
+import { createJobActor, getPendingApplications, flushPendingApplications } from '@/lib/icp';
 import { AuthClient } from '@dfinity/auth-client';
 
 
@@ -78,6 +78,25 @@ export default function ApplicationsPage() {
 				console.warn('Failed to fetch applications', e);
 			}
 		})();
+
+		// If not authenticated, load any locally saved pending applications so users
+		// can see what will be submitted after they sign in.
+		try {
+			const pending = getPendingApplications();
+			if (pending && pending.length > 0 && mounted) {
+				// Map minimal pending structure into the UI model
+				const mapped = pending.map((p: any) => ({
+					id: p.jobId + '::pending::' + (p.createdAt || ''),
+					jobTitle: 'Pending: ' + (p.jobTitle || p.jobId),
+					company: '',
+					appliedDate: p.createdAt ? (new Date(p.createdAt)).toISOString().slice(0,10) : '',
+					status: 'Applied' as any,
+					notes: p.cover || '',
+				}));
+				setApps((s) => [...mapped, ...s]);
+			}
+		} catch (e) { /* ignore */ }
+		return () => { mounted = false; };
 		return () => { mounted = false; };
 	}, []);
 

@@ -7,21 +7,23 @@ import Iter "mo:base/Iter";
 import Error "mo:base/Error";
 import Hash "mo:base/Hash";
 
-type AgentId = Nat;
-type AgentRecord = {
-    id: AgentId;
-    nama: Text;
-    email: Text;
-    role: Text;
-    createdAt: Int;
-};
-
 actor AgentContract {
+    // Types moved into the actor body to satisfy the Motoko compiler's
+    // limitation requiring an actor/class to be the only non-import top-level
+    // declaration in the program.
+    type AgentId = Nat;
+    type AgentRecord = {
+        id: AgentId;
+        nama: Text;
+        email: Text;
+        role: Text;
+        createdAt: Int;
+    };
     var nextAgentId: Nat = 1;
     var agentList: [(AgentId, AgentRecord)] = [];
 
     // Hash function custom untuk Nat (ID kecil, cukup gunakan nilai Nat itu sendiri)
-    func natHash(n: Nat) : Hash.Hash { Nat32.fromNat(n) }
+    func natHash(n: Nat) : Hash.Hash { Nat32.fromNat(n) };
 
     private var agents: HashMap.HashMap<AgentId, AgentRecord> = HashMap.HashMap<AgentId, AgentRecord>(100, Nat.equal, natHash);
 

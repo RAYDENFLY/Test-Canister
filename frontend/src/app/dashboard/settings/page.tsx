@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { AuthClient } from '@dfinity/auth-client';
+import { HttpAgent } from '@dfinity/agent';
+import { hashPassword } from '@/lib/crypto';
+import { setPasswordOnCanister } from '@/lib/icp';
 
 export default function SettingsPage() {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -32,12 +36,44 @@ export default function SettingsPage() {
     setError(null);
     setMessage(null);
     try {
-      // Simulate server call
-      await new Promise((r) => setTimeout(r, 700));
-      setMessage('Password updated (simulated). Use your new password next time you sign in.');
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      // Hash the new password client-side
+      const pwRes = await hashPassword(newPassword);
+      const hashed = (pwRes && (pwRes.hash || pwRes.encoded)) || '';
+
+      // If the user is authenticated via Internet Identity, write the hashed
+      // password to the identity canister. Otherwise, store it locally to be
+      // flushed on sign-in.
+      const authClient = await AuthClient.create();
+      const isAuth = await authClient.isAuthenticated();
+      if (isAuth) {
+        try {
+          const identity = authClient.getIdentity();
+          const host = process.env.NEXT_PUBLIC_DFX_HOST || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000' : window.location.origin);
+          const agent = new HttpAgent({ identity, host });
+          try { if (process.env.NODE_ENV !== 'production') await agent.fetchRootKey(); } catch (e) {}
+          // setPasswordOnCanister will use the provided actor if available; pass
+          // an actor would be more explicit but setPasswordOnCanister accepts
+          // an actor argument if the caller supplies one. We'll call it with
+          // no actor here because it will create the actor using env config.
+          await setPasswordOnCanister(hashed);
+          setMessage('Password saved to canister. Use your new password next time you sign in.');
+          setCurrentPassword('');
+          setNewPassword('');
+          setConfirmPassword('');
+        } catch (e: any) {
+          console.error('Failed to save password to canister', e);
+          // fallback: save locally so it can be finalized after II sign-in
+          try { localStorage.setItem('cv:pendingPasswordHash', hashed); } catch (er) {}
+          setMessage('Saved locally. Complete sign-in to persist to canister.');
+        }
+      } else {
+        // Persist pending password hash to be written after authentication.
+        try { localStorage.setItem('cv:pendingPasswordHash', hashed); } catch (e) {}
+        setMessage('Password saved locally. Sign in to persist to canister.');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      }
     } catch (err: any) {
       setError(err?.message || 'Failed to reset password');
     } finally {
